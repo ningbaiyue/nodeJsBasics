@@ -8,7 +8,7 @@ router.get('/', function(req, res, next) {
 });
 
 
-router.post("/user/add", (req, res) => {
+router.post("/user", (req, res) => {
   console.log(req.body);
   //插入数据库
   // 1. 创建一个模型(user,限制filed类型), 一一对应数据库的集合(users)
@@ -24,7 +24,7 @@ router.post("/user/add", (req, res) => {
   })
 })
 // 动态路由, 获取id
-router.post("/user/update/:myid", (req, res) => {
+router.put("/user/:myid", (req, res) => {
   console.log(req.body, req.params.myid);
   const { username, password, age } = req.body
   UserModel.updateOne({ _id: req.params.myid }, {
@@ -36,7 +36,7 @@ router.post("/user/update/:myid", (req, res) => {
   })
 })
 
-router.get("/user/delete/:id", (req, res) => {
+router.delete("/user/:id", (req, res) => {
   UserModel.deleteOne({
     _id: req.params.id
   }).then(data => {
@@ -46,7 +46,7 @@ router.get("/user/delete/:id", (req, res) => {
   })
 })
 
-router.get("/user/list", (req, res) => {
+router.get("/user", (req, res) => {
   console.log(req.query);
   const { page, limit } = req.query
   UserModel.find({}, ["username", "age"]).sort({
