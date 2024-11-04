@@ -10,6 +10,7 @@ var loginRouter = require('./routes/login');
 
 //引入
 var session  = require("express-session")
+const MongoStore = require("connect-mongo");
 var app = express();
 
 // view engine setup
@@ -27,11 +28,15 @@ app.use(session({
   name: "nbysystem",
   secret: "dwad4489384dawdwa",
   cookie: {
-    maxAge: 1000*60*60,
+    maxAge: 1000 * 60 * 60,
     secure: false
   },
-  resave: true,
-  saveUninitialized: true
+  resave: true, // 重新设置session后， 会自动重新计算过期时间
+  saveUninitialized: true,
+  store: MongoStore.create({
+    mongoUrl: 'mongodb://127.0.0.1:27017/kerwin_session', //新创建了一个数据库
+    ttl: 1000 * 60 * 60 // 过期时间
+  }) 
 }))
 
 // 设置中间件，sesssion过期校验
@@ -43,6 +48,8 @@ app.use((req, res, next) => {
   }
 
   if (req.session.user) {
+    // 重新设置以下sesssion
+    req.session.mydate = Date.now()
     next()
   } else {
     // 是接口 , 返回 错误码
