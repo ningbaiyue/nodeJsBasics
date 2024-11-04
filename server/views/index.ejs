@@ -54,6 +54,9 @@
           }
         }).then(res => res.json()).then(res => {
           console.log(res)
+          if(res.ok === 0){
+            location.href="/login"
+          }
         })
       }
 
@@ -70,6 +73,9 @@
           }
         }).then(res => res.json()).then(res => {
           console.log(res)
+          if(res.ok === 0){
+            location.href="/login"
+          }
         })
       }
 
@@ -78,12 +84,18 @@
           method: "DELETE"
         }).then(res => res.json()).then(res => {
           console.log(res)
+          if(res.ok === 0){
+            location.href="/login"
+          }
         })
       }
 
       // 获取列表
       fetch("/api/user?page=1&limit=10").then(res => res.json()).then(res => {
         console.log(res)
+        if(res.ok === 0){
+          location.href="/login"
+        }
         var tbody = document.querySelector("tbody")
         tbody.innerHTML = res.map(item => `
             <tr>

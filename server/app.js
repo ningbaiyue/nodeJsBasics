@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var loginRouter = require('./routes/login');
 
+//引入
+var session  = require("express-session")
 var app = express();
 
 // view engine setup
@@ -19,6 +21,36 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
+// 注册session中间件
+app.use(session({
+  name: "nbysystem",
+  secret: "dwad4489384dawdwa",
+  cookie: {
+    maxAge: 1000*60*60,
+    secure: false
+  },
+  resave: true,
+  saveUninitialized: true
+}))
+
+// 设置中间件，sesssion过期校验
+app.use((req, res, next) => {
+  // 排除login相关的路由和接口
+  if (req.url.includes("login")) {
+    next()
+    return
+  }
+
+  if (req.session.user) {
+    next()
+  } else {
+    // 是接口 , 返回 错误码
+    // 不是接口，就重定向
+    req.url.includes('api')
+    ? res.status(401).json({ ok: 0 }) : res.redirect('/login')
+  }
+})
 
 app.use('/', indexRouter);
 app.use('/api', usersRouter);

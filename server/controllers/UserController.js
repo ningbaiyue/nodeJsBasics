@@ -45,6 +45,9 @@ const UserController = {
                 ok: 0
             })
         } else {
+            // 设置session {}  
+            req.session.user = data[0] //设置session对象， 
+            // 默认存在内存中。
             res.send({
                 ok: 1
             })
