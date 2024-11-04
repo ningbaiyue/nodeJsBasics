@@ -58,7 +58,7 @@
       }
 
       update.onclick = () => {
-        fetch("/api/user/67284f64f77ded4ccae3286e", {
+        fetch("/api/user/67287cc24fb4ff2290b293a8", {
           method: "PUT",
           body: JSON.stringify({
             username: "修改的名字",
@@ -74,7 +74,7 @@
       }
 
       deletebutton.onclick = () => {
-        fetch("/api/user/67284f64f77ded4ccae3286e", {
+        fetch("/api/user/67287cc24fb4ff2290b293a8", {
           method: "DELETE"
         }).then(res => res.json()).then(res => {
           console.log(res)

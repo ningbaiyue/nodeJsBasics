@@ -1,0 +1,29 @@
+/*
+ * @作者: NingBY
+ * @Date: 2024-11-04 16:23:26
+ */
+const UserModel = require('../model/UserModel')
+const UserService = {
+    addUser: (username, password, age) => {
+        return UserModel.create({
+            username, password, age
+        })
+    },
+    updateUser: (_id, username, password, age) => {
+        return UserModel.updateOne({ _id }, {
+            username, password, age
+        })
+    },
+    deleteUser: (_id) => {
+        return UserModel.deleteOne({
+          _id: _id
+        })
+    },
+    getUser: (page, limit) => {
+        return UserModel.find({}, ["username", "age"]).sort({
+            age: -1
+          }).skip((page - 1) * limit).limit(limit)
+    }
+}
+
+module.exports = UserService
