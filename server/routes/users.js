@@ -3,7 +3,7 @@ const UserController = require('../controllers/UserController');
 var router = express.Router();
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get('/', function(req, res, next){
   res.send('respond with a resource');
 });
 
@@ -15,5 +15,8 @@ router.put("/user/:myid", UserController.updateUser)
 router.delete("/user/:id", UserController.deleteUser)
 // 获取用户列表
 router.get("/user", UserController.getUser)
+
+// 登录校验
+router.post("/login",UserController.login)
 
 module.exports = router;

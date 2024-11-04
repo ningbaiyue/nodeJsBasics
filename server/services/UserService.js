@@ -23,6 +23,9 @@ const UserService = {
         return UserModel.find({}, ["username", "age"]).sort({
             age: -1
           }).skip((page - 1) * limit).limit(limit)
+    },
+    login: (username, password) => {
+        return UserModel.find({username, password})
     }
 }
 
