@@ -11,6 +11,7 @@ var loginRouter = require('./routes/login');
 //引入
 var session  = require("express-session")
 const MongoStore = require("connect-mongo");
+const JWT = require('./util/JWT');
 var app = express();
 
 // view engine setup
@@ -34,28 +35,38 @@ app.use(session({
   resave: true, // 重新设置session后， 会自动重新计算过期时间
   saveUninitialized: true,
   store: MongoStore.create({
-    mongoUrl: 'mongodb://127.0.0.1:27017/kerwin_session', //新创建了一个数据库
+    mongoUrl: 'mongodb://127.0.0.1:27017/nby_session', //新创建了一个数据库
     ttl: 1000 * 60 * 60 // 过期时间
   }) 
 }))
 
 // 设置中间件，sesssion过期校验
 app.use((req, res, next) => {
-  // 排除login相关的路由和接口
+  //排除login相关的路由和接口
   if (req.url.includes("login")) {
     next()
     return
   }
 
-  if (req.session.user) {
-    // 重新设置以下sesssion
-    req.session.mydate = Date.now()
-    next()
+  const token = req.headers['authorization']?.split(' ')[1]
+  if (token) {
+    const payload = JWT.verify(token)
+    if (payload) {
+      // 重新计算token过期时间
+      const newToken = JWT.generate({
+        _id:payload._id,
+        username:payload.username
+      },"1d")
+      res.header("Authorization",newToken)
+      next()
+    } else {
+      res.status(401).send({
+        errCode: -1, 
+        errInfo: "token过期"
+      })
+    }
   } else {
-    // 是接口 , 返回 错误码
-    // 不是接口，就重定向
-    req.url.includes('api')
-    ? res.status(401).json({ ok: 0 }) : res.redirect('/login')
+    next()
   }
 })
 
