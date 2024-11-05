@@ -2,7 +2,8 @@
  * @作者: NingBY
  * @Date: 2024-11-04 16:19:17
  */
-const UserService = require("../services/UserService")
+const UserService = require("../services/UserService");
+const JWT = require("../util/JWT");
 const UserController = {
     addUser: async (req, res) => {
         console.log(req.body);
@@ -45,8 +46,14 @@ const UserController = {
                 ok: 0
             })
         } else {
-            // 设置session {}  
-            req.session.user = data[0] //设置session对象， 
+            console.log(data[0])
+            // 设置token 
+            const token = JWT.generate({
+                _id: data[0]._id,
+                username: data[0].username
+            }, "1d")
+            //token返回在header
+            res.header("Authorization",token)
             // 默认存在内存中。
             res.send({
                 ok: 1
