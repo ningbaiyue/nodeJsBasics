@@ -20,7 +20,7 @@ const UserService = {
         })
     },
     getUser: (page, limit) => {
-        return UserModel.find({}, ["username", "age"]).sort({
+        return UserModel.find({}, ["username", "age", "avatar"]).sort({
             age: -1
           }).skip((page - 1) * limit).limit(limit)
     },

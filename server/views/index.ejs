@@ -35,7 +35,12 @@
       return Promise.reject(error);
     });
   </script>
-
+  <style>
+    td img {
+      width: 80px;
+      height: 80px;
+    }
+  </style>
 </head>
 
 <body>
@@ -46,6 +51,7 @@
     <div>用户名:<input id="username" /></div>
     <div>密码:<input type="password" id="password" /></div>
     <div>年龄:<input type="number" id="age" /></div>
+    <div>头像:<input type="file" id="avatar" /></div>
     <div><button id="register">添加用户</button></div>
   </div>
   <hr>
@@ -61,6 +67,7 @@
         <td>id</td>
         <td>用户名</td>
         <td>年龄</td>
+        <td>头像</td>
       </tr>
     </thead>
     <tbody>
@@ -75,14 +82,20 @@
     var username = document.querySelector("#username")
     var password = document.querySelector("#password")
     var age = document.querySelector("#age")
+    var avatar = document.querySelector("#avatar")
 
     register.onclick = () => {
-      console.log(username.value, password.value, age.value)
+      console.log(username.value, password.value, age.value, avatar.files[0])
+      const formsdata = new FormData()
+      formsdata.append("username", username.value)
+      formsdata.append("password", password.value)
+      formsdata.append("age", age.value)
+      formsdata.append("avatar", avatar.files[0])
 
-      axios.post("/api/user", {
-        username: username.value,
-        password: password.value,
-        age: age.value
+      axios.post("/api/user", formsdata, {
+        headers:{
+          "Content-Type":"multipart/form-data"
+        }
       }).then(res => {
         console.log(res.data)
       })
@@ -115,7 +128,8 @@
           <tr>
             <td>${item._id}</td>  
             <td>${item.username}</td>  
-            <td>${item.age}</td>  
+            <td>${item.age}</td>
+            <td><img src="${item.avatar}"/></td/>  
           </tr>
         `).join("")
     })
