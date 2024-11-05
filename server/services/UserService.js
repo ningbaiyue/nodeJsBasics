@@ -4,9 +4,9 @@
  */
 const UserModel = require('../model/UserModel')
 const UserService = {
-    addUser: (username, password, age) => {
+    addUser: (username, password, age, avatar) => {
         return UserModel.create({
-            username, password, age
+            username, password, age, avatar
         })
     },
     updateUser: (_id, username, password, age) => {

@@ -1,6 +1,14 @@
+/*
+ * @作者: NingBY
+ * @Date: 2024-11-04 00:49:24
+ */
 var express = require('express');
 const UserController = require('../controllers/UserController');
 var router = express.Router();
+//引入multer
+const multer  = require('multer')
+const upload = multer({ dest: 'public/uploads/' })
+
 
 /* GET users listing. */
 router.get('/', function(req, res, next){
@@ -8,7 +16,7 @@ router.get('/', function(req, res, next){
 });
 
 // 相应前端的post请求-增加用户
-router.post("/user", UserController.addUser)
+router.post("/user", upload.single("avatar"), UserController.addUser)
 // 动态路由, 获取id -更新用户
 router.put("/user/:myid", UserController.updateUser)
 // 删除用户
